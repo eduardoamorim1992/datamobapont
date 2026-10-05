@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/organic-2f8eaa04-a40f-4445-9670-75a506048912/styles.css">
+<script src="_ds/organic-2f8eaa04-a40f-4445-9670-75a506048912/_ds_bundle.js"></script>
+<style>body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body)}a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(198,113,57,.45)}50%{box-shadow:0 0 0 8px rgba(198,113,57,0)}}</style>
+</helmet>
+<div style="max-width:1280px;margin:0 auto;padding:clamp(20px,4vw,48px);display:flex;flex-direction:column;gap:32px">
+  <header style="display:flex;flex-direction:column;gap:14px;max-width:820px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="tag tag-accent-2">Datamob · Oficina</span>
+      <span class="tag tag-neutral">10 passos · ~2 min</span>
+    </div>
+    <h1 style="font-family:var(--font-heading);font-weight:400;font-size:clamp(32px,5vw,52px);line-height:1.05;margin:0;text-wrap:pretty">Como verificar se a OS tem apontamento</h1>
+    <p style="margin:0;font-size:18px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">A ordem de serviço só pode ser encerrada se existir apontamento. Esta verificação vale apenas quando o solicitante escreveu na mensagem:</p>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--color-accent-100);border-radius:var(--radius-lg);padding:16px 22px;align-self:flex-start">
+      <span style="font-family:ui-monospace,Menlo,monospace;font-size:17px;color:var(--color-accent-800)">Tipo de apontamento: <strong>TABLET</strong></span>
+    </div>
+  </header>
+
+  <div style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+    <nav style="flex:1 1 260px;display:flex;flex-direction:column;gap:6px;background:var(--color-surface,#fbf4e8);border-radius:var(--radius-lg);padding:14px;box-shadow:var(--shadow-sm);max-width:360px">
+      <sc-for list="{{ steps }}" as="s" hint-placeholder-count="10">
+        <button onClick="{{ s.go }}" style="display:flex;align-items:center;gap:12px;text-align:left;border:0;cursor:pointer;padding:10px 12px;border-radius:999px;font:inherit;font-size:15px;background:{{ s.navBg }};color:{{ s.navFg }}" style-hover="background:var(--color-accent-100)">
+          <span style="flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:{{ s.dotBg }};color:{{ s.dotFg }}">{{ s.num }}</span>
+          <span style="line-height:1.25">{{ s.short }}</span>
+        </button>
+      </sc-for>
+    </nav>
+
+    <main style="flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="flex:1;height:8px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden">
+          <div style="height:100%;border-radius:999px;background:var(--color-accent);transition:width .35s ease;width:{{ progress }}"></div>
+        </div>
+        <span style="font-size:14px;color:var(--color-neutral-700);white-space:nowrap">Passo {{ cur.num }} de {{ total }}</span>
+      </div>
+
+      <section style="display:flex;flex-direction:column;gap:18px;background:var(--color-surface,#fbf4e8);border-radius:var(--radius-lg);padding:clamp(18px,3vw,32px);box-shadow:var(--shadow-md)">
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <span style="flex:none;width:48px;height:48px;border-radius:50%;background:var(--color-accent);color:#fff;display:grid;place-items:center;font-family:var(--font-heading);font-size:22px">{{ cur.num }}</span>
+          <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+            <h2 style="font-family:var(--font-heading);font-weight:400;font-size:clamp(24px,3vw,32px);line-height:1.1;margin:0">{{ cur.title }}</h2>
+            <p style="margin:0;font-size:17px;line-height:1.55;color:var(--color-neutral-800);text-wrap:pretty">{{ cur.text }}</p>
+          </div>
+        </div>
+
+        <sc-if value="{{ cur.isGate }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:16px;padding:22px;border-radius:var(--radius-lg);background:var(--color-bg)">
+            <p style="margin:0;font-size:18px;font-weight:600">A mensagem do solicitante contém “Tipo de apontamento: TABLET”?</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <button class="btn btn-primary" onClick="{{ gateYes }}">Sim, contém</button>
+              <button class="btn btn-secondary" onClick="{{ gateNo }}">Não contém</button>
+            </div>
+            <sc-if value="{{ gateNoShown }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:16px 20px;border-radius:var(--radius-lg);background:var(--color-accent-2-100);color:var(--color-accent-2-900);font-size:16px;line-height:1.5">Esta verificação não se aplica. Siga o procedimento normal de encerramento da OS.</div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ cur.hasImg }}" hint-placeholder-val="{{ false }}">
+          <div style="position:relative;border-radius:var(--radius-lg);overflow:hidden;background:#fff;box-shadow:var(--shadow-sm);align-self:{{ cur.align }};max-width:{{ cur.maxW }};width:100%">
+            {{ imgEl }}
+            <sc-if value="{{ showHighlights }}" hint-placeholder-val="{{ true }}">
+              <sc-for list="{{ cur.marks }}" as="m" hint-placeholder-count="0">
+                <div style="position:absolute;border:3px solid var(--color-accent);border-radius:12px;animation:pulse 1.8s ease-in-out infinite;pointer-events:none;left:{{ m.l }};top:{{ m.t }};width:{{ m.w }};height:{{ m.h }}"></div>
+              </sc-for>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ cur.tip }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:14px 20px;border-radius:var(--radius-lg);background:var(--color-accent-2-100);color:var(--color-accent-2-900);font-size:15px;line-height:1.5"><strong>Dica:</strong> {{ cur.tip }}</div>
+        </sc-if>
+
+        <sc-if value="{{ cur.isResult }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px">
+            <div style="display:flex;flex-direction:column;gap:8px;padding:20px 22px;border-radius:var(--radius-lg);background:var(--color-accent-2-100)">
+              <span class="tag tag-accent-2" style="align-self:flex-start">A OS aparece na lista</span>
+              <p style="margin:0;font-family:var(--font-heading);font-size:22px;color:var(--color-accent-2-900)">Existe apontamento</p>
+              <p style="margin:0;font-size:15px;line-height:1.5;color:var(--color-accent-2-900)">Pode encerrar a ordem de serviço.</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;padding:20px 22px;border-radius:var(--radius-lg);background:var(--color-accent-100)">
+              <span class="tag tag-accent" style="align-self:flex-start">Nenhum registro encontrado</span>
+              <p style="margin:0;font-family:var(--font-heading);font-size:22px;color:var(--color-accent-800)">Não há apontamento</p>
+              <p style="margin:0;font-size:15px;line-height:1.5;color:var(--color-accent-800)">Não encerre a OS. Confira o período e o número da OS; se continuar sem registro, retorne ao solicitante.</p>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:6px">
+          <button class="btn btn-ghost" onClick="{{ prev }}" disabled="{{ atStart }}">← Anterior</button>
+          <sc-if value="{{ showNext }}" hint-placeholder-val="{{ true }}">
+            <button class="btn btn-primary" onClick="{{ next }}">Próximo →</button>
+          </sc-if>
+          <sc-if value="{{ atEnd }}" hint-placeholder-val="{{ false }}">
+            <button class="btn btn-secondary" onClick="{{ restart }}">Recomeçar</button>
+          </sc-if>
+        </div>
+      </section>
+      <p style="margin:0;font-size:13px;color:var(--color-neutral-600)">Use as setas ← → do teclado para navegar.</p>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showHighlights&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const STEPS = [
+  { short: 'Conferir a mensagem', title: 'Confira a mensagem do solicitante', text: 'Antes de tudo, leia a mensagem da OS. A verificação de apontamento só é obrigatória quando o tipo de apontamento informado for TABLET.', gate: true },
+  { short: 'Abrir o portal', title: 'Abra o portal e o menu', text: 'Acesse portal.datamobapps.com.br e clique no ícone de menu (☰), no canto superior esquerdo.', img: 'assets/01.png', marks: [[0.6,12,3.6,6]] },
+  { short: 'Módulo OFICINA', title: 'Selecione o módulo OFICINA', text: 'Na caixa de seleção do topo do menu (vem como CONTROLE DE ACESSO), escolha OFICINA.', img: 'assets/02.png', maxW: '560px', marks: [[0.5,11.5,47,23]] },
+  { short: 'Análise de Oficina', title: 'Abra Análise › Análise de Oficina', text: 'Clique em Análise para expandir as opções e depois em Análise de Oficina.', img: 'assets/03.png', maxW: '560px', marks: [[4,62.8,45,9.5]] },
+  { short: 'Conferir a unidade', title: 'Confira a unidade', text: 'Na tela Análise de Oficina, confira se a Unidade está correta (ex.: 1 – UNIDADE IGUATEMI).', img: 'assets/04.png', marks: [[4.2,22.6,22.6,6]] },
+  { short: 'Definir o período', title: 'Ajuste o período', text: 'Clique nas datas de Período e escolha um intervalo que cubra o dia em que o serviço da OS foi feito.', img: 'assets/05.png', marks: [[28.6,24.4,22.8,6], [28.8,29.8,14.2,34.8]], tip: 'Se não souber a data exata, use um período maior — a consulta continua filtrada pela OS.' },
+  { short: 'Situação: Todos', title: 'Deixe a Situação em “Todos”', text: 'Na lista Situação, mantenha (ou selecione) Todos para não esconder turnos abertos, aprovados ou cancelados.', img: 'assets/06.png', marks: [[52.3,51.6,14,6]] },
+  { short: 'Abrir o filtro', title: 'Clique no botão de filtro', text: 'Clique no botão azul com o ícone de funil, ao lado de Consultar.', img: 'assets/07.png', marks: [[74.1,22.6,4,6.4]] },
+  { short: 'Informar a OS', title: 'Informe o número da OS e aplique', text: 'Na janela Filtro, role até o campo OS, digite o número da ordem de serviço e clique em Aplicar.', img: 'assets/09.png', maxW: '560px', marks: [[9,30.6,77.4,8], [51.6,88.8,13.8,7.6]], tip: 'Se quiser, preencha também o campo Mecânico (matrícula) no início do filtro para refinar a busca.' },
+  { short: 'Ver o resultado', title: 'Consulte e veja o resultado', text: 'Clique em Consultar. Expanda a linha do mecânico pela seta (›) e confira se a OS aparece na tabela de serviços, com início, fim e duração.', img: 'assets/10.png', marks: [[3.9,55.5,0.1,0], [3.9,67.2,94.8,9.6]], result: true }
+];
+class Component extends DCLogic {
+  state = { i: 0, gateNo: false };
+  componentDidMount() {
+    this.onKey = e => { if (e.key === 'ArrowRight') this.go(this.state.i + 1); if (e.key === 'ArrowLeft') this.go(this.state.i - 1); };
+    window.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this.onKey); }
+  go(i) { if (i < 0 || i >= STEPS.length) return; this.setState({ i, gateNo: false }); }
+  renderVals() {
+    const { i } = this.state;
+    const n = STEPS.length;
+    const pct = v => v + '%';
+    const s = STEPS[i];
+    const cur = {
+      num: i + 1, title: s.title, text: s.text, isGate: !!s.gate, hasImg: !!s.img, img: s.img,
+      maxW: s.maxW || '100%', align: s.maxW ? 'flex-start' : 'stretch', tip: s.tip || '', isResult: !!s.result,
+      marks: (s.marks || []).filter(m => m[2] > 1).map(m => ({ l: pct(m[0]), t: pct(m[1]), w: pct(m[2]), h: pct(m[3]) }))
+    };
+    return {
+      cur, total: n,
+      imgEl: s.img ? React.createElement('img', { key: s.img, src: s.img, alt: s.title, style: { display: 'block', width: '100%', height: 'auto' } }) : null, progress: ((i + 1) / n * 100) + '%',
+      showHighlights: this.props.showHighlights ?? true,
+      steps: STEPS.map((st, k) => ({
+        num: k + 1, short: st.short, go: () => this.go(k),
+        navBg: k === i ? 'var(--color-accent-200)' : 'transparent',
+        navFg: k === i ? 'var(--color-accent-900)' : 'var(--color-text)',
+        dotBg: k < i ? 'var(--color-accent-2)' : k === i ? 'var(--color-accent)' : 'var(--color-neutral-200)',
+        dotFg: k <= i ? '#fff' : 'var(--color-neutral-800)'
+      })),
+      prev: () => this.go(i - 1), next: () => this.go(i + 1), restart: () => this.go(0),
+      atStart: i === 0, atEnd: i === n - 1, showNext: i < n - 1 && !s.gate,
+      gateYes: () => this.go(1), gateNo: () => this.setState({ gateNo: true }), gateNoShown: this.state.gateNo
+    };
+  }
+}
+</script>
+</body>
+</html>
